@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.george.weibo.R
 import com.george.weibo.WeiboApplication
 import com.george.weibo.logic.entity.Weibo
+import com.george.weibo.tools.LogUtils
 import com.george.weibo.tools.MyDate
 import com.squareup.picasso.Picasso
 import java.util.*
@@ -53,12 +54,17 @@ class WeiboItemAdapter(val data: MutableList<Weibo>) : RecyclerView.Adapter<Weib
     }
 
     /**
-     * input sample : "abc, #hello# george"
-     * output sample : "abc <link>hello</hello> george"
+     * input sample : "abc, #hello# george http://abc"
+     * output sample : "abc <link>hello</hello> george <link>前往</link>"
      */
-    fun convertPlain2LinkText(source : String) : CharSequence{
-        var sourceType : Boolean = source[0]=='#'
-        println(sourceType)
+    fun convertPlain2LinkText(_source : String) : CharSequence{
+        // TODO 因为CharSequence使用replace会使得之前的setSpan失效。所以只能先去掉网页
+        val regex = Regex("http://[^\\s]*")
+        var find = regex.find(_source)
+        LogUtils.d("convertPlain2LinkText", "find: ${find?.value}")
+        var source = _source.replace(regex, "")
+        LogUtils.d("convertPlain2LinkText", "source: ${source}")
+
         val stringTokenizer = StringTokenizer(source, "#")
 
         var result : CharSequence = StringBuilder()
@@ -66,8 +72,11 @@ class WeiboItemAdapter(val data: MutableList<Weibo>) : RecyclerView.Adapter<Weib
         var previousType : Boolean = false // false-> plain text
         for(substring in stringTokenizer){
             var tmp : CharSequence
+            LogUtils.d("convertPlain2LinkText", "substring: ${substring}")
             index = source.indexOf(substring as String, index)
+            LogUtils.d("convertPlain2LinkText", "index: ${index}")
             var nowType : Boolean = previousType && index-2>=0 && source[index-2]=='#' || !previousType && index-1>=0 && source[index-1]=='#'
+            LogUtils.d("convertPlain2LinkText", "nowType: ${nowType}")
             previousType = nowType
             if(nowType){
                 tmp = SpannableString(substring as CharSequence?)
@@ -79,9 +88,24 @@ class WeiboItemAdapter(val data: MutableList<Weibo>) : RecyclerView.Adapter<Weib
             }else{
                 tmp = substring as CharSequence
             }
+            index += substring.length+1         // TODO 如果把这行放在index = source.indexOf(substring as String, index) 会出现之前的链接失效
             result = TextUtils.concat(result, tmp)
         }
-        println(result)
+
+        LogUtils.d("convertPlain2LinkText", "result: ${result}")
+
+
+        if(find?.value != null){
+            var tmp : CharSequence = "前往"
+            tmp = SpannableString(tmp as CharSequence?)
+            tmp.setSpan(object : ClickableSpan(){
+                override fun onClick(widget: View) {
+                    Toast.makeText(WeiboApplication.context, "implementing", Toast.LENGTH_SHORT).show()
+                }
+            }, 0, tmp.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+            result = TextUtils.concat(result, tmp)
+        }
         return result
     }
 }
