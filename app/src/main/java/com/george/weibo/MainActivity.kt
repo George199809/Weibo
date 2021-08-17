@@ -2,17 +2,23 @@ package com.george.weibo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextUtils
+import android.text.style.ClickableSpan
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.george.commontest.listern.OnScrollListener
 import com.george.weibo.logic.entity.Weibo
 import com.george.weibo.logic.entity.WeiboListParam
 import com.george.weibo.ui.WeiboItemAdapter
 import com.george.weibo.ui.WeiboViewModel
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     val weiboViewModel by lazy { ViewModelProvider(this).get(WeiboViewModel::class.java) }
@@ -20,9 +26,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 //        UETool.showUETMenu();
-//
 //        UETool.showUETMenu(0);
+
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
         setContentView(R.layout.activity_main)
         weiboViewModel.getWeiboList(WeiboListParam(1,20))
 
@@ -32,10 +39,9 @@ class MainActivity : AppCompatActivity() {
         val weiboItemAdapter = WeiboItemAdapter(weiboViewModel.weiboList)
         weiboRecyclerView.layoutManager = linearLayoutManager
         weiboRecyclerView.adapter = weiboItemAdapter
-        findViewById<Button>(R.id.testBtn).setOnClickListener {
-            weiboViewModel.getWeiboList(WeiboListParam(1,40))
-        }
 
+
+        // TODO 有没有办法将这里简化
         weiboRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             var previousTotal = 0
             var loading = true
@@ -80,6 +86,8 @@ class MainActivity : AppCompatActivity() {
         })
 
     }
+
+
 
 
 }

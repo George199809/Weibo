@@ -8,12 +8,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/testBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="test"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/weiboRecyclerView"
         android:layout_width="match_parent"
