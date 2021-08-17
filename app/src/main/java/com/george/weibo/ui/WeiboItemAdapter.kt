@@ -60,7 +60,7 @@ class WeiboItemAdapter(val data: MutableList<Weibo>) : RecyclerView.Adapter<Weib
     fun convertPlain2LinkText(_source : String) : CharSequence{
         // TODO 因为CharSequence使用replace会使得之前的setSpan失效。所以只能先去掉网页
         val regex = Regex("http://[^\\s]*")
-        var find = regex.find(_source)
+        val find = regex.find(_source)
         LogUtils.d("convertPlain2LinkText", "find: ${find?.value}")
         var source = _source.replace(regex, "")
         LogUtils.d("convertPlain2LinkText", "source: ${source}")

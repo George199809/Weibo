@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         setContentView(R.layout.activity_main)
-        weiboViewModel.getWeiboList(WeiboListParam(1,20))
+        weiboViewModel.getWeiboList()
 
 
         val weiboRecyclerView = findViewById<RecyclerView>(R.id.weiboRecyclerView)
@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
 
         // TODO 有没有办法将这里简化
+        // TODO 滚动逻辑有待优化，总数到达一定次数就无法滚动，初步判断是后端api的请求限制
         weiboRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             var previousTotal = 0
             var loading = true
@@ -69,9 +70,11 @@ class MainActivity : AppCompatActivity() {
 
                 if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
                     val initialSize = weiboViewModel.weiboList.size
-                    weiboViewModel.getWeiboList(WeiboListParam(1,50))
-                    Log.d("MainActivity","updata weibo list")
+                    weiboViewModel.getWeiboList()
+                    Log.d("MainActivity","update weibo list")
                     val updatedSize = weiboViewModel.weiboList.size
+                    if(initialSize == updatedSize)
+                        Toast.makeText(WeiboApplication.context, "no new data", Toast.LENGTH_SHORT).show()
                     recyclerView.post { weiboItemAdapter.notifyItemRangeInserted(initialSize, updatedSize) }
                     loading = true
                 }
@@ -80,8 +83,9 @@ class MainActivity : AppCompatActivity() {
 
         weiboViewModel.weiboListLiveData.observe(this, Observer { result ->
             val weiboList = result.getOrNull() as MutableList<Weibo>
+            Log.d("MainActivity","new weiboList size ${weiboList.size}")
             weiboViewModel.weiboList.addAll(weiboList)
-            println(weiboList)
+//            Log.d("MainActivity","weiboList ${weiboList}")
             weiboItemAdapter.notifyDataSetChanged()
         })
 
