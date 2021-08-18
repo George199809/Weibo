@@ -14,6 +14,8 @@ object WeiboNetwork {
 
     suspend fun getWeiboList(param : WeiboListParam) = weiboService.getWeiboList(param.page, param.count).await()
 
+    suspend fun getUerInfo(uid : String) = weiboService.getUerInfo(uid).await()
+
     private suspend fun <T> Call<T>.await(): T{
         return suspendCoroutine { continuation ->
             enqueue(object : Callback<T>{
