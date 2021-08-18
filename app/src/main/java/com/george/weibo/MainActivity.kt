@@ -1,17 +1,25 @@
 package com.george.weibo
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ClickableSpan
+import android.util.AttributeSet
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.george.weibo.logic.entity.Weibo
@@ -23,21 +31,38 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     val weiboViewModel by lazy { ViewModelProvider(this).get(WeiboViewModel::class.java) }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            android.R.id.home -> findViewById<DrawerLayout>(R.id.mainDrawerLayout).openDrawer(GravityCompat.START)
+        }
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 //        UETool.showUETMenu();
 //        UETool.showUETMenu(0);
 
         super.onCreate(savedInstanceState)
-        supportActionBar?.hide()
+//        supportActionBar?.hide()
+        setSupportActionBar(findViewById<Toolbar>(R.id.mainToolBar))
+        supportActionBar?.let{
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setHomeAsUpIndicator(R.drawable.ic_menu)
+        }
         setContentView(R.layout.activity_main)
         weiboViewModel.getWeiboList()
 
 
         val weiboRecyclerView = findViewById<RecyclerView>(R.id.weiboRecyclerView)
-        val linearLayoutManager = LinearLayoutManager(this)
+//        val linearLayoutManager = LinearLayoutManager(this)
+        val gridLayoutManager = GridLayoutManager(this, 1)
         val weiboItemAdapter = WeiboItemAdapter(weiboViewModel.weiboList)
-        weiboRecyclerView.layoutManager = linearLayoutManager
+        weiboRecyclerView.layoutManager = gridLayoutManager
         weiboRecyclerView.adapter = weiboItemAdapter
 
 
@@ -57,8 +82,8 @@ class MainActivity : AppCompatActivity() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 visibleItemCount = recyclerView.childCount
-                totalItemCount = linearLayoutManager.itemCount
-                firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition()
+                totalItemCount = gridLayoutManager.itemCount
+                firstVisibleItem = gridLayoutManager.findFirstVisibleItemPosition()
 
                 if (loading) {
                     if (totalItemCount > previousTotal) {
