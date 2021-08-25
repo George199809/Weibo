@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.george.weibo.logic.entity.UserInfoResponse
 import com.george.weibo.logic.entity.Weibo
 import com.george.weibo.logic.entity.WeiboListParam
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             android.R.id.home -> findViewById<DrawerLayout>(R.id.mainDrawerLayout).openDrawer(GravityCompat.START)
+            R.id.hello -> Toast.makeText(this, "implementing", Toast.LENGTH_SHORT).show()
         }
         return true
     }
@@ -55,22 +57,27 @@ class MainActivity : AppCompatActivity() {
 //        UETool.showUETMenu(0);
 
         super.onCreate(savedInstanceState)
-//        supportActionBar?.hide()
-        setSupportActionBar(findViewById<Toolbar>(R.id.mainToolBar))
+        setContentView(R.layout.activity_main)
+        setSupportActionBar(findViewById<Toolbar>(R.id.mainToolBar))    // 需要放在setContentView之后
         supportActionBar?.let{
             it.setDisplayHomeAsUpEnabled(true)
             it.setHomeAsUpIndicator(R.drawable.ic_menu)
         }
-        setContentView(R.layout.activity_main)
         weiboViewModel.getWeiboList()
 
 
         val weiboRecyclerView = findViewById<RecyclerView>(R.id.weiboRecyclerView)
-//        val linearLayoutManager = LinearLayoutManager(this)
         val gridLayoutManager = GridLayoutManager(this, 1)
         val weiboItemAdapter = WeiboItemAdapter(weiboViewModel.weiboList)
         weiboRecyclerView.layoutManager = gridLayoutManager
         weiboRecyclerView.adapter = weiboItemAdapter
+
+        findViewById<SwipeRefreshLayout>(R.id.swipeRefresh).apply {
+            setOnRefreshListener {
+                Toast.makeText(this@MainActivity, "implementing", Toast.LENGTH_SHORT).show()
+                this.isRefreshing = false
+            }
+        }
 
 
         // TODO 有没有办法将这里简化
@@ -126,7 +133,6 @@ class MainActivity : AppCompatActivity() {
             val weiboList = result.getOrNull() as MutableList<Weibo>
             LogUtils.d("MainActivity","new weiboList size ${weiboList.size}")
             weiboViewModel.weiboList.addAll(weiboList)
-//            Log.d("MainActivity","weiboList ${weiboList}")
             weiboItemAdapter.notifyDataSetChanged()
         })
 
