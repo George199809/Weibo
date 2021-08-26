@@ -19,16 +19,15 @@ class WeiboViewModel : ViewModel(){
 
     fun getWeiboList(){
         LogUtils.d("WeiboViewModel", "into getWeiboList page:${paramLiveData.value?.page} & count:${paramLiveData.value?.count}")
-        var newParam: WeiboListParam
-        if(paramLiveData?.value == null){
-            newParam = WeiboListParam(1,100)
-        }else{
-            newParam = WeiboListParam(paramLiveData.value!!.page+1,100)
-            LogUtils.d("WeiboViewModel", "getWeiboList touch page:${newParam.page} & count:${newParam.count}")
+        var newParam: WeiboListParam = WeiboListParam(1,20)
+        paramLiveData.value?.apply {
+            newParam = if (count <= 80) WeiboListParam(page, count + 20)
+            else WeiboListParam(page + 1, 20)
         }
-        LogUtils.d("WeiboViewModel", "weiboList size:${weiboList.size}")
-        LogUtils.d("WeiboViewModel", "out getWeiboList page:${newParam.page} & count:${newParam.count}")
-
         paramLiveData.value = newParam
+    }
+
+    fun refreshWeiboList(){
+        paramLiveData.value = WeiboListParam(1,20)
     }
 }

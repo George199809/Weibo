@@ -1,18 +1,10 @@
 package com.george.weibo
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.TextUtils
-import android.text.style.ClickableSpan
-import android.util.AttributeSet
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
@@ -21,12 +13,10 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.george.weibo.logic.entity.UserInfoResponse
 import com.george.weibo.logic.entity.Weibo
-import com.george.weibo.logic.entity.WeiboListParam
 import com.george.weibo.tools.LogUtils
 import com.george.weibo.ui.UserInfoViewModel
 import com.george.weibo.ui.WeiboItemAdapter
@@ -74,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<SwipeRefreshLayout>(R.id.swipeRefresh).apply {
             setOnRefreshListener {
-                Toast.makeText(this@MainActivity, "implementing", Toast.LENGTH_SHORT).show()
+                weiboViewModel.refreshWeiboList()
                 this.isRefreshing = false
             }
         }
