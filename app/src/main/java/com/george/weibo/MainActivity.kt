@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
 import com.george.weibo.logic.entity.UserInfoResponse
 import com.george.weibo.logic.entity.Weibo
 import com.george.weibo.tools.LogUtils
@@ -114,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             val userInfoResponse = result.getOrNull() as UserInfoResponse
             LogUtils.d("MainActivity", "update userInfo ${userInfoResponse.name} + ${userInfoResponse.profileUrl}")
             val profileImg = findViewById<CircleImageView>(R.id.userProfileImg)
-            Picasso.with(WeiboApplication.context).load(userInfoResponse.profileUrl).into(profileImg);
+            Glide.with(WeiboApplication.context).load(userInfoResponse.profileUrl).into(profileImg)
             findViewById<TextView>(R.id.userNameText).text = userInfoResponse.name
             findViewById<TextView>(R.id.LocationText).text = userInfoResponse.location
         })

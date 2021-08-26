@@ -59,5 +59,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="8月11日16:00至12日16:00考生填报征集志愿...全文： http://m.weibo.cn/1642629063/4668976791293056 "/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/picRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.george.weibo.R
 import com.george.weibo.WeiboApplication
@@ -28,6 +29,7 @@ class WeiboItemAdapter(val data: MutableList<Weibo>) : RecyclerView.Adapter<Weib
         val profileImg : ImageView = view.findViewById(R.id.profileImg)
         val createdTime : TextView = view.findViewById(R.id.createdTime)
         val contextText : TextView = view.findViewById(R.id.contextTx)
+        val picRecyclerView: RecyclerView = view.findViewById(R.id.picRecyclerView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -47,11 +49,11 @@ class WeiboItemAdapter(val data: MutableList<Weibo>) : RecyclerView.Adapter<Weib
         holder.createdTime.text = MyDate(Date(mBlog.createdTime)).toString()
         holder.contextText.text = convertPlain2LinkText(mBlog.text)
         holder.contextText.movementMethod = LinkMovementMethod.getInstance()
+        holder.picRecyclerView.layoutManager = GridLayoutManager(WeiboApplication.context, 3,GridLayoutManager.VERTICAL, false)
+        holder.picRecyclerView.adapter = WeiboPicItemAdapter(mBlog)
     }
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
+    override fun getItemCount() = data.size
 
     /**
      * input sample : "abc, #hello# george http://abc"
