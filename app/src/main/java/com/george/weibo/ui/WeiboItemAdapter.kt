@@ -5,7 +5,6 @@ import android.text.Spanned
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +13,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.george.weibo.R
 import com.george.weibo.WeiboApplication
 import com.george.weibo.logic.entity.Weibo
 import com.george.weibo.tools.LogUtils
 import com.george.weibo.tools.MyDate
-import com.squareup.picasso.Picasso
 import java.util.*
 
 
@@ -45,7 +44,7 @@ class WeiboItemAdapter(val data: MutableList<Weibo>) : RecyclerView.Adapter<Weib
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val mBlog = data[position]
         holder.userName.text = mBlog.user.name
-        Picasso.with(WeiboApplication.context).load(mBlog.user.profileUrl).into(holder.profileImg);
+        Glide.with(WeiboApplication.context).load(mBlog.user.profileUrl).into(holder.profileImg)
         holder.createdTime.text = MyDate(Date(mBlog.createdTime)).toString()
         holder.contextText.text = convertPlain2LinkText(mBlog.text)
         holder.contextText.movementMethod = LinkMovementMethod.getInstance()

@@ -3,6 +3,7 @@ package com.george.weibo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -19,16 +20,12 @@ import com.bumptech.glide.Glide
 import com.george.weibo.logic.entity.UserInfoResponse
 import com.george.weibo.logic.entity.Weibo
 import com.george.weibo.tools.LogUtils
-import com.george.weibo.ui.UserInfoViewModel
 import com.george.weibo.ui.WeiboItemAdapter
 import com.george.weibo.ui.WeiboViewModel
-import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
     val weiboViewModel by lazy { ViewModelProvider(this).get(WeiboViewModel::class.java) }
-    val userInfoViewModel by lazy { ViewModelProvider(this).get(UserInfoViewModel::class.java) }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar, menu)
@@ -110,11 +107,10 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        userInfoViewModel.getUser(WeiboApplication.UID)
-        userInfoViewModel.userInfo.observe(this, Observer { result->
+        weiboViewModel.getUser(WeiboApplication.UID)
+        weiboViewModel.userInfo.observe(this, Observer { result->
             val userInfoResponse = result.getOrNull() as UserInfoResponse
-            LogUtils.d("MainActivity", "update userInfo ${userInfoResponse.name} + ${userInfoResponse.profileUrl}")
-            val profileImg = findViewById<CircleImageView>(R.id.userProfileImg)
+            val profileImg = findViewById<CircleImageView>(R.id.userProfileImg)     //FIXME 屏幕反转的时候 profileImg为空
             Glide.with(WeiboApplication.context).load(userInfoResponse.profileUrl).into(profileImg)
             findViewById<TextView>(R.id.userNameText).text = userInfoResponse.name
             findViewById<TextView>(R.id.LocationText).text = userInfoResponse.location

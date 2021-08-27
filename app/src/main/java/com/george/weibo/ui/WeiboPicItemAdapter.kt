@@ -1,5 +1,6 @@
 package com.george.weibo.ui
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,11 +8,11 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.george.weibo.FullScreenImg
 import com.george.weibo.R
 import com.george.weibo.WeiboApplication
 import com.george.weibo.logic.entity.Weibo
 import com.george.weibo.tools.LogUtils
-import com.squareup.picasso.Picasso
 
 class WeiboPicItemAdapter(val weibo: Weibo) : RecyclerView.Adapter<WeiboPicItemAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -21,9 +22,7 @@ class WeiboPicItemAdapter(val weibo: Weibo) : RecyclerView.Adapter<WeiboPicItemA
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.weibo_pic_item, parent, false)
         val viewHolder = ViewHolder(view)
-        viewHolder.weiBoPicImg.setOnClickListener {
-            Toast.makeText(parent.context, "implementing", Toast.LENGTH_SHORT).show()
-        }
+
 
         if (weibo.pics.isEmpty() || weibo.bmiddle_pic == null || weibo.original_pic == null) return viewHolder
         val bmiddleHeader = getUrlHeader(weibo.bmiddle_pic)
@@ -39,6 +38,12 @@ class WeiboPicItemAdapter(val weibo: Weibo) : RecyclerView.Adapter<WeiboPicItemA
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         LogUtils.d("WeiboPicItemAdapter", "pic url : ${weibo.pics[position].bmiddle_pic}")
         Glide.with(WeiboApplication.context).load(weibo.pics[position].bmiddle_pic).placeholder(R.drawable.ic_delete).into(holder.weiBoPicImg)
+        holder.weiBoPicImg.setOnClickListener {
+            val intent = Intent(WeiboApplication.context, FullScreenImg::class.java)
+            intent.putExtra("url", weibo.pics[position].bmiddle_pic)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            WeiboApplication.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -66,4 +71,6 @@ class WeiboPicItemAdapter(val weibo: Weibo) : RecyclerView.Adapter<WeiboPicItemA
 
         return url.substring(0, index + 1)
     }
+
+
 }

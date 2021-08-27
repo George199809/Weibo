@@ -10,6 +10,7 @@ import com.george.weibo.tools.LogUtils
 
 class WeiboViewModel : ViewModel(){
     private val paramLiveData = MutableLiveData<WeiboListParam>()
+    private val userIdLiveData = MutableLiveData<String>()
 
     val weiboList = ArrayList<Weibo>()
 
@@ -29,5 +30,13 @@ class WeiboViewModel : ViewModel(){
 
     fun refreshWeiboList(){
         paramLiveData.value = WeiboListParam(1,20)
+    }
+
+    val userInfo  = Transformations.switchMap(userIdLiveData){  uid->
+        Repository.getUerInfo(uid)
+    }
+
+    fun getUser(uid : String){
+        userIdLiveData.value = uid
     }
 }
