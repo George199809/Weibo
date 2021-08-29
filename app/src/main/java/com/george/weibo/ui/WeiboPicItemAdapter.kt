@@ -5,10 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.george.weibo.FullScreenImg
+import com.george.weibo.FullScreenImgActivity
 import com.george.weibo.R
 import com.george.weibo.WeiboApplication
 import com.george.weibo.logic.entity.Weibo
@@ -39,10 +38,7 @@ class WeiboPicItemAdapter(val weibo: Weibo) : RecyclerView.Adapter<WeiboPicItemA
         LogUtils.d("WeiboPicItemAdapter", "pic url : ${weibo.pics[position].bmiddle_pic}")
         Glide.with(WeiboApplication.context).load(weibo.pics[position].bmiddle_pic).placeholder(R.drawable.ic_delete).into(holder.weiBoPicImg)
         holder.weiBoPicImg.setOnClickListener {
-            val intent = Intent(WeiboApplication.context, FullScreenImg::class.java)
-            intent.putExtra("url", weibo.pics[position].bmiddle_pic)
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            WeiboApplication.context.startActivity(intent)
+            FullScreenImgActivity.start(WeiboApplication.context, weibo.pics[position].original_pic!!)
         }
     }
 

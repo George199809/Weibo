@@ -1,5 +1,7 @@
 package com.george.weibo.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextUtils
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.george.weibo.R
+import com.george.weibo.WebViewActivity
 import com.george.weibo.WeiboApplication
 import com.george.weibo.logic.entity.Weibo
 import com.george.weibo.tools.LogUtils
@@ -83,7 +86,8 @@ class WeiboItemAdapter(val data: MutableList<Weibo>) : RecyclerView.Adapter<Weib
                 tmp = SpannableString(substring as CharSequence?)
                 tmp.setSpan(object : ClickableSpan(){
                     override fun onClick(widget: View) {
-                        Toast.makeText(WeiboApplication.context, "implementing", Toast.LENGTH_SHORT).show()
+                        val url : String = "https://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&rsv_idx=1&tn=baidu&wd=" + tmp.toString()
+                        WebViewActivity.start(WeiboApplication.context, url)
                     }
                 }, 0, substring.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }else{
@@ -101,7 +105,8 @@ class WeiboItemAdapter(val data: MutableList<Weibo>) : RecyclerView.Adapter<Weib
             tmp = SpannableString(tmp as CharSequence?)
             tmp.setSpan(object : ClickableSpan(){
                 override fun onClick(widget: View) {
-                    Toast.makeText(WeiboApplication.context, "implementing", Toast.LENGTH_SHORT).show()
+                    val url : String = find.value
+                    WebViewActivity.start(WeiboApplication.context, url)
                 }
             }, 0, tmp.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 

@@ -1,5 +1,6 @@
 package com.george.weibo
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -124,8 +125,6 @@ class MainActivity : AppCompatActivity() {
         })
 
     }
-
-
 
 
 }

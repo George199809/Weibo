@@ -14,7 +14,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".FullScreenImg"
+            android:name=".WebViewActivity"
+            android:exported="true" />
+        <activity
+            android:name=".FullScreenImgActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
