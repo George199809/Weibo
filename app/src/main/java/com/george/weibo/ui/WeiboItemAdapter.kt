@@ -51,7 +51,9 @@ class WeiboItemAdapter(val data: MutableList<Weibo>) : RecyclerView.Adapter<Weib
         holder.createdTime.text = MyDate(Date(mBlog.createdTime)).toString()
         holder.contextText.text = convertPlain2LinkText(mBlog.text)
         holder.contextText.movementMethod = LinkMovementMethod.getInstance()
-        holder.picRecyclerView.layoutManager = GridLayoutManager(WeiboApplication.context, 3,GridLayoutManager.VERTICAL, false)
+        var number = if(mBlog.pics.size < 3) mBlog.pics.size else 3
+        if(number == 0) number = 1
+        holder.picRecyclerView.layoutManager = GridLayoutManager(WeiboApplication.context, number, GridLayoutManager.VERTICAL, false)
         holder.picRecyclerView.adapter = WeiboPicItemAdapter(mBlog)
     }
 
