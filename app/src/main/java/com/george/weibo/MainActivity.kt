@@ -100,8 +100,8 @@ class MainActivity : AppCompatActivity() {
                     weiboViewModel.getWeiboList()
                     Log.d("MainActivity","update weibo list")
                     val updatedSize = weiboViewModel.weiboList.size
-                    if(initialSize == updatedSize)
-                        Toast.makeText(WeiboApplication.context, "no new data", Toast.LENGTH_SHORT).show()
+//                    if(initialSize == updatedSize)
+//                        Toast.makeText(WeiboApplication.context, "no new data", Toast.LENGTH_SHORT).show()
                     recyclerView.post { weiboItemAdapter.notifyItemRangeInserted(initialSize, updatedSize) }
                     loading = true
                 }
